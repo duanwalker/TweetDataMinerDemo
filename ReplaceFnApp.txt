@@ -1,0 +1,21 @@
+#r "Newtonsoft.Json"
+
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
+
+public static async Task<IActionResult> Run(HttpRequest req, ILogger log) {
+
+   log.LogInformation("HttpWebhook triggered");
+
+   // Parse query parameter
+   string reqBodyContent = await new StreamReader(req.Body).ReadToEndAsync();
+
+   // Replace any single or double quotes with an empty string
+   string updatedBody = reqBodyContent.Replace("'", "").Replace("\"", "").Replace("name:","");
+
+   // Return cleaned text
+   return (ActionResult)new OkObjectResult(updatedBody);
+}
